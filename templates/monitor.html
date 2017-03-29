@@ -22,19 +22,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                 {% for t in num %}
-                    {% if status == 0 %}
+                 {% for t in range(engine_num) %}
+                    {% if engine_status_list[t] == 0 %}
                         <tr class="info">
-                            <td>{{ host }}</td>
-                            <td>{{ status }}</td>
+                            <td>{{ engine_list[t] }}</td>
+                            <td>{{ engine_status_list[t] }}</td>
                             <td>
                                 OK
                             </td>
                         </tr>
                      {% else %}
                           <tr class="danger">
-                            <td>{{ host }}</td>
-                            <td>{{ status }}</td>
+                            <td>{{ engine_list[t] }}</td>
+                            <td>{{ engine_status_list[t] }}</td>
                             <td>
                                  Fail
                             </td>

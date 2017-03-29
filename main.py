@@ -1,44 +1,54 @@
 # -*- coding: UTF-8 -*-
 
 from flask import Flask, render_template, redirect, request
-from flask_sqlalchemy import SQLAlchemy
-import os,sys,socket
+import os,sys,socket,time
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-num = "int(len(sys.argv))"
-host = "192.168.1.1"
-#status = int(sys.argv[1])
-status_engine = 0
-status_AH = 0
-status_mirror = 0
-status_drvstate = 0
-status_drive_path = 0
-status_engine_path = 0
-status_initiator_path = 0
+engine_num = "int(len(sys.argv))"
 
-def get_status_engine
-    PORT = "25000"
-#    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sh = socket.socket()
-    sh.settimeout(1)    ## set a timeout of 1 sec
-    for i in range (0, 1): # try once
-        result = sh.connect_ex((engine_ip, int(PORT)))  # connect to the remote host on port 25000
-                                                    ## (port 25000 is always open for HA-AP engine)
-#        print ".... ", result
-        if result > 0:
-            dbg.printDBG2(file_name, "can not connect to engine: %s port: %s, retry=%s" %(engine_ip, PORT, i))
-        else:           # everything is OK!
-            dbg.printDBG2(file_name, "connected to engine: %s port: %s, retry=%s" %(engine_ip, PORT, i))
-            sh.close()
-            return True
-    sh.close()
-    return False
+#status_engine = 0
+#status_AH = 0
+#status_mirror = 0
+#status_drvstate = 0
+#status_drive_path = 0
+#status_engine_path = 0
+#status_initiator_path = 0
+
+def get_engine_list():
+    engine_list = []
+    for i in range(1,len(sys.argv)):
+        engine_list.append(sys.argv[i])
+        i += 1
+    return engine_list
+
+def get_engine_status_list(engine_list):
+    PORT = "80"
+    engine_status_list = []
+    for i in range(len(engine_list)):
+        print engine_list[i]
+        sh = socket.socket()
+        sh.settimeout(1)
+#        for i in range (0,1):
+        engine_status = sh.connect_ex((engine_list[i], int(PORT)))
+        print engine_status
+        sh.close()
+        time.sleep(0.25)
+        if engine_status > 0:
+            engine_status = 1
+        else:
+            engine_status == 0
+        engine_status_list.append(engine_status)
+    return engine_status_list
 
 @app.route("/")
 def home():
-    return render_template("monitor.html",num = num,status = status,host = host)
+    engine_list = get_engine_list()
+    engine_num = int(len(engine_list))
+    print engine_list
+    engine_status_list = get_engine_status_list(engine_list)
+    return render_template("monitor.html",engine_list = engine_list,engine_num = engine_num,engine_status_list = engine_status_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
