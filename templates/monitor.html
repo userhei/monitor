@@ -13,11 +13,12 @@
     <div class="page-header">
         <h1>HA-AP Monitor</h1>
     </div>
-            <h2>Monitor</h2>
+            <h2>Engine Monitor</h2>
                 <table class="table">
                 <thead>
                     <tr>
                         <th>Engine</td>
+                        
                         <th>Status</td>
                     </tr>
                 </thead>
@@ -26,7 +27,7 @@
                     {% if engine_status_list[t] == 0 %}
                         <tr class="info">
                             <td>{{ engine_list[t] }}</td>
-                            <td>{{ engine_status_list[t] }}</td>
+                            
                             <td>
                                 OK
                             </td>
@@ -34,15 +35,82 @@
                      {% else %}
                           <tr class="danger">
                             <td>{{ engine_list[t] }}</td>
-                            <td>{{ engine_status_list[t] }}</td>
+                            
                             <td>
                                  Fail
                             </td>
-                        </tr>
+                        	</tr>
                      {% endif %}
                     {% endfor %}
                 </tbody>
                 </table>
+		<h2>System Monitor</h2>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Engine</td>
+                <th>Mirror_Status</td>
+                <th>Path_Status</td>
+            </tr>
+        </thead>
+        <tbody>
+         {% for x in range(system_status_list[0]| length) %}
+		 	{% for y in range(system_status_list[1][x]| length) %}
+		 		{% if system_status_list[2][x] == 0 %}
+					<tr class="info">
+						<td>{{ system_status_list[0][x] }}</td>
+                        <td>
+							OK
+						</td>
+                        <td>
+                            OK
+                        </td>
+                     </tr>
+                  {% elif system_status_list[2][x] == 2 %}
+					 <tr class="danger">
+					 	<td>{{ system_status_list[0][x] }}</td>
+					 	<td>
+					 		Alarm
+					 	</td>
+					 	<td>
+					 	    OK
+					 	</td>
+					  </tr>
+                  {% elif system_status_list[2][x] == 4 %}
+					 <tr class="danger">
+					 	<td>{{ system_status_list[0][x] }}</td>
+					 	<td>
+					 		OK
+					 	</td>
+					 	<td>
+					 	    Alarm
+					 	</td>
+					  </tr>	
+                  {% elif system_status_list[2][x] == 6 %}
+					 <tr class="danger">
+					 	<td>{{ system_status_list[0][x] }}</td>
+					 	<td>
+					 		Alarm
+					 	</td>
+					 	<td>
+					 	    Alarm
+					 	</td>
+					  </tr>	
+                  {% elif system_status_list[2][x] == 198 %}
+					 <tr class="danger">
+					 	<td>{{ system_status_list[0][x] }}</td>
+					 	<td>
+					 		--
+					 	</td>
+					 	<td>
+					 	    --
+					 	</td>
+					  </tr>	
+                  {% endif %}
+                 {% endfor %}
+				{% endfor %} 
+        </tbody>
+        </table>
 </div>
 
 <footer class="footer">
